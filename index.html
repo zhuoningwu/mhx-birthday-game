@@ -374,7 +374,7 @@
       <div class="panel">
         <div class="badge">🎂 MHX and the City｜Birthday Edition</div>
         <h1><span class="gradient-text">在这座城市里，</span><br/>每一种欲望都有线索。</h1>
-        <p class="lead">请 mhx 完成一个非常不严肃、但看起来有点高级的生日测试。系统会根据答案锁定一份生日惊喜，并允许一次“生日反悔权”。至于具体是什么——先不告诉你。</p>
+        <p class="lead">请 mhx 完成一个非常不严肃的生日测试。系统会根据答案锁定一份生日惊喜，并允许一次生日反悔权。</p>
         <div class="btns">
           <button class="primary" onclick="startQuiz()">开始测试</button>
           
@@ -401,7 +401,7 @@
       <div class="panel loading">
         <div class="spinner"></div>
         <h2>正在分析 mhx 的生日脑回路……</h2>
-        <p class="lead" style="margin: 0 auto;">请稍等，系统正在把“想要但不好意思说”翻译成礼物。</p>
+        <p class="lead" style="margin: 0 auto;">请稍等，礼物就像一盒巧克力，你永远不知道下一块是什么味道。</p>
       </div>
     </section>
 
@@ -413,7 +413,7 @@
             <h2 id="typeTitle"></h2>
             <p id="typeDesc"></p>
             <div class="tagrow" id="typeTags"></div>
-            <div class="footer-note">下一步：点击抽签。抽到的不是“随机糊弄”，是“命运认真糊弄”。</div>
+            <div class="footer-note">下一步：点击抽签。抽到的不是随机糊弄，是认真糊弄。</div>
           </div>
           <div class="gift-box">
             <div class="badge">🎁 礼物抽签区</div>
@@ -422,7 +422,7 @@
               <button class="primary" id="drawBtn" onclick="drawGift()">抽取生日礼物</button>
               <button class="secondary" onclick="restart()">重新答题</button>
             </div>
-            <p class="footer-note">提示：第一次抽到的最有仪式感。第二次属于“生日当天可以任性一下”。</p>
+            <p class="footer-note">提示：第一次抽到的最有仪式感。第二次属于生日当天可以任性一下。</p>
           </div>
         </div>
       </div>
@@ -447,7 +447,7 @@
           <button class="primary" id="rerollBtn" onclick="rerollGift()">使用生日反悔权</button>
           <button class="secondary" onclick="restart()">重新开始</button>
         </div>
-        <div class="footer-note" id="rerollNote">反悔权只有一次。不是系统小气，是生日礼物也要有边界感。</div>
+        <div class="footer-note" id="rerollNote">反悔权只有一次（ChatGPT说的，我可没这么想）。</div>
       </div>
     </section>
   </main>
@@ -458,10 +458,10 @@
         title: "你理想中的‘今天状态不错’更接近哪一种？",
         sub: "没有正确答案，只有系统正在悄悄给你分类。",
         answers: [
-          {label: "身上有一点好闻的味道", small: "路过以后，空气记得我来过。", scores: {dior: 3, diptyque: 2}},
-          {label: "穿得舒服，但看起来没随便", small: "松弛感可以有，睡衣感也可以有。", scores: {pajamas: 3, cap: 1}},
-          {label: "随手一拿就能出门", small: "东西别乱，包也别太费劲。", scores: {bag: 3, cap: 1}},
-          {label: "有一个小细节在发光", small: "不必很大，但最好有点存在感。", scores: {gold: 3, lip: 1}}
+          {label: "身上有一点好闻的味道", scores: {dior: 3, diptyque: 2}},
+          {label: "穿得舒服，但看起来没随便", scores: {pajamas: 3, cap: 1}},
+          {label: "随手一拿就能出门", scores: {bag: 3, cap: 1}},
+          {label: "有一个小细节在发光", scores: {gold: 3, lip: 1}}
         ]
       },
       {
@@ -469,14 +469,14 @@
         sub: "请按真实版本回答，不按朋友圈营业版本回答。",
         answers: [
           {label: "随便逛逛，顺便把自己收拾漂亮", small: "没有目的，但可能会买点东西。", scores: {lip: 2, dior: 2, bag: 1}},
-          {label: "戴帽子出门，主打一个轻松", small: "头发状态不参与今天的决策。", scores: {cap: 4}},
+          {label: "低调出门，主打一个轻松", small: "头发状态不参与今天的决策。", scores: {cap: 4}},
           {label: "在家窝着，把舒服贯彻到底", small: "外面的世界可以下次再说。", scores: {pajamas: 4}},
           {label: "去一个有气味、有设计感的小店", small: "喜欢的东西最好有点自己的脾气。", scores: {diptyque: 4}}
         ]
       },
       {
         title: "下面哪一种礼物最容易让你觉得‘她有认真选’？",
-        sub: "核心题出现了，系统开始假装自己很懂你。",
+        sub: "核心题出现了，系统开始假装很懂你。",
         answers: [
           {label: "有纪念意义，几年后还能留着", small: "最好还能附带一点离谱但可爱的创意。", scores: {gold: 4}},
           {label: "每天都能用，而且越用越顺手", small: "使用频率就是礼物的存在感。", scores: {bag: 4}},
@@ -486,10 +486,10 @@
       },
       {
         title: "你比较喜欢哪一种‘贵得有道理’？",
-        sub: "预算管理暂时离场，审美判断正式上线。",
+        sub: "审美判断正式上线。",
         answers: [
           {label: "经典、好认、不会轻易过时", small: "有一点正式的生日主礼物感。", scores: {dior: 3, bag: 2}},
-          {label: "懂的人自然懂，别太大众", small: "不需要所有人都认识。", scores: {diptyque: 4}},
+          {label: "懂的人自然懂", small: "不需要所有人都认识。", scores: {diptyque: 4}},
           {label: "材质本身就有价值", small: "小归小，但不是纯气氛组。", scores: {gold: 4}},
           {label: "设计简单，搭什么都不费脑", small: "好用和好看最好别二选一。", scores: {cap: 2, bag: 3}}
         ]
@@ -498,15 +498,15 @@
         title: "如果礼物能自动改善一种生活场景，你选哪个？",
         sub: "暂不考虑科学依据，主要考虑生日心情。",
         answers: [
-          {label: "素颜出门也显得气色不错", small: "本人没有化全妆，但嘴唇很有精神。", scores: {lip: 5}},
-          {label: "头发不配合时依然可以体面出门", small: "帽子负责解决今天的大部分问题。", scores: {cap: 5}},
-          {label: "回家后立刻进入勿扰模式", small: "舒服到不想再换衣服。", scores: {pajamas: 5}},
-          {label: "普通一天也能留下实体纪念", small: "手机里有照片，手里也要有一张。", scores: {camera: 5}}
+          {label: "素颜出门也显得气色不错", scores: {lip: 5}},
+          {label: "犯懒的时候依然可以体面出门", scores: {cap: 5}},
+          {label: "回家后立刻进入勿扰模式", scores: {pajamas: 5}},
+          {label: "普通一天也能留下纪念", scores: {camera: 5}}
         ]
       },
       {
         title: "你喜欢的香味更像哪一种画面？",
-        sub: "不懂香水术语完全没关系，凭感觉选。",
+        sub: "选就完了（这是ChatGPT设置的，我也不知道它在干什么）。",
         answers: [
           {label: "明亮、轻盈、像认真打扮后出门", small: "很好亲近，但不是没有存在感。", scores: {dior: 5}},
           {label: "安静、有层次、像一家很好逛的店", small: "不急着讨好所有人。", scores: {diptyque: 5}},
@@ -516,12 +516,12 @@
       },
       {
         title: "最后一题：今年的生日礼物关键词，你选哪组？",
-        sub: "选完以后，就不能说自己完全没有参与决策了。",
+        sub: "选完以后就不能说自己完全没有参与决策了（对，自己的锅自己背，是这个意思，嘻嘻）。",
         answers: [
-          {label: "精致、明亮、有仪式感", small: "拆开那一刻要像一份正经生日礼物。", scores: {dior: 3, gold: 2}},
-          {label: "松弛、舒服、每天用得到", small: "不需要供起来，直接进入生活。", scores: {pajamas: 3, cap: 2}},
-          {label: "低调、特别、有自己的气质", small: "不追求最大声，但要有记忆点。", scores: {diptyque: 3, lip: 2}},
-          {label: "实用、有趣、以后还能想起来", small: "最好既能用，也能留下故事。", scores: {bag: 2, camera: 3}}
+          {label: "拆开那一刻要像一份正经生日礼物", scores: {dior: 3, gold: 2}},
+          {label: "主打一个生活气息", scores: {pajamas: 3, cap: 2}},
+          {label: "低调特别，有mhx的气质（已经开始说胡话了）", scores: {diptyque: 3, lip: 2}},
+          {label: "最好既能用，也能留下故事", scores: {bag: 2, camera: 3}}
         ]
       }
     ];
