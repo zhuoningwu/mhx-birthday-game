@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fff7f0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>MHX and the City｜Birthday Edition</title>
+  <style>
+    :root {
+      --bg1: #fff7f0;
+      --bg2: #f3efff;
+      --ink: #2d2438;
+      --muted: #71677f;
+      --card: rgba(255,255,255,.82);
+      --line: rgba(68, 45, 90, .12);
+      --accent: #d65c8a;
+      --accent2: #7c5cff;
+      --accent3: #ffb347;
+      --shadow: 0 18px 60px rgba(52, 38, 75, .14);
+      --radius: 26px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255, 179, 71, .32), transparent 32%),
+        radial-gradient(circle at 88% 12%, rgba(124, 92, 255, .22), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .dot {
+      position: absolute;
+      width: 8px;
+      height: 14px;
+      border-radius: 3px;
+      animation: fall 2.6s linear forwards;
+      opacity: .95;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: .2; }
+    }
+
+    .wrap {
+      width: min(960px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: max(16px, env(safe-area-inset-top)) 0 max(28px, env(safe-area-inset-bottom));
+    }
+
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+    }
+
+    .panel {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: clamp(24px, 5vw, 48px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: radial-gradient(circle at 85% 0%, rgba(214, 92, 138, .15), transparent 32%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,.64);
+      color: var(--muted);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 74px);
+      line-height: 1.02;
+      margin: 18px 0 18px;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--accent), var(--accent2), #f08a24);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: clamp(17px, 2.2vw, 22px);
+      line-height: 1.7;
+      color: var(--muted);
+      margin: 0 0 28px;
+      max-width: 690px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btns { display: flex; flex-wrap: wrap; gap: 12px; position: relative; z-index: 1; }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-size: 16px;
+      touch-action: manipulation;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
+      font-family: inherit;
+    }
+
+    button:hover { transform: translateY(-2px); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 12px 28px rgba(124, 92, 255, .24);
+    }
+
+    .secondary {
+      color: var(--ink);
+      background: rgba(255,255,255,.74);
+      border: 1px solid var(--line);
+    }
+
+    .mini-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; animation: fade .28s ease both; }
+    @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+      color: var(--muted);
+    }
+
+    .progress {
+      flex: 1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(45, 36, 56, .08);
+      overflow: hidden;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent3));
+      transition: width .25s ease;
+    }
+
+    .q-card {
+      padding: clamp(22px, 4vw, 36px);
+      border-radius: 24px;
+      background: rgba(255,255,255,.76);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 28px rgba(52, 38, 75, .08);
+    }
+
+    .q-title {
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.18;
+      margin: 0 0 10px;
+      letter-spacing: -.8px;
+    }
+
+    .q-sub {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .answer {
+      text-align: left;
+      border-radius: 20px;
+      padding: 18px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      min-height: 88px;
+      box-shadow: none;
+      line-height: 1.45;
+    }
+
+    .answer strong { display: block; margin-bottom: 4px; }
+    .answer small { color: var(--muted); font-weight: 500; }
+
+    .answer:hover {
+      box-shadow: 0 12px 28px rgba(52, 38, 75, .10);
+      border-color: rgba(214, 92, 138, .28);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px 18px;
+    }
+
+    .spinner {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 8px solid rgba(124, 92, 255, .14);
+      border-top-color: var(--accent2);
+      margin: 0 auto 22px;
+      animation: spin .9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .result-layout {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .result-box, .gift-box {
+      border-radius: 24px;
+      padding: clamp(22px, 4vw, 34px);
+      background: rgba(255,255,255,.78);
+      border: 1px solid var(--line);
+    }
+
+    .result-box h2, .gift-box h2 { margin: 0 0 12px; font-size: clamp(26px, 4vw, 38px); line-height: 1.15; }
+    .result-box p, .gift-box p { color: var(--muted); line-height: 1.75; margin: 0 0 16px; }
+
+    .tagrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .tag {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(214, 92, 138, .10);
+      color: #8e3159;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .vault {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .vault-card {
+      aspect-ratio: 1 / 1.06;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 12px;
+      background:
+        linear-gradient(135deg, rgba(124, 92, 255, .12), rgba(255, 179, 71, .16)),
+        #fff;
+      border: 1px solid var(--line);
+      font-weight: 850;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .vault-card.selected {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      animation: pop .4s ease both;
+    }
+    @keyframes pop { 50% { transform: scale(1.06) rotate(-1deg); } }
+
+    .gift-name {
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -.7px;
+      margin: 10px 0 12px;
+    }
+
+    .gift-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .gift-mini {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.72);
+    }
+
+    .gift-mini strong { display: block; margin-bottom: 6px; }
+    .gift-mini span { color: var(--muted); font-size: 13px; line-height: 1.45; display: block; }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 760px) {
+      .wrap { width: calc(100% - 16px); padding-top: 8px; }
+      .panel { border-radius: 20px; padding: 20px 16px; }
+      .hero { min-height: 100svh; }
+      .answers, .result-layout, .gift-list { grid-template-columns: 1fr; }
+      .vault { grid-template-columns: repeat(2, 1fr); }
+      h1 { letter-spacing: -1.2px; font-size: clamp(34px, 12vw, 52px); }
+      .lead { font-size: 17px; line-height: 1.6; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .progress { width: 100%; }
+      button { width: 100%; min-height: 52px; }
+      .btns { flex-direction: column; }
+      .answer { min-height: 78px; padding: 16px; }
+      .q-card, .result-box, .gift-box { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti" id="confetti"></div>
+  <main class="wrap">
+    <section class="hero screen active" id="startScreen">
+      <div class="panel">
+        <div class="badge">🎂 MHX and the City｜Birthday Edition</div>
+        <h1><span class="gradient-text">在这座城市里，</span><br/>每一种欲望都有线索。</h1>
+        <p class="lead">请 mhx 完成一个非常不严肃、但看起来有点高级的生日测试。系统会根据答案锁定一份生日惊喜，并允许一次“生日反悔权”。至于具体是什么——先不告诉你。</p>
+        <div class="btns">
+          <button class="primary" onclick="startQuiz()">开始测试</button>
+          
+        </div>
+        <div class="mini-note">算法含量约 3%，情绪价值约 97%。最终解释权归送礼人所有。</div>
+      </div>
+    </section>
+
+    <section class="screen" id="quizScreen">
+      <div class="panel">
+        <div class="topbar">
+          <div id="counter">问题 1 / 6</div>
+          <div class="progress"><span id="bar"></span></div>
+        </div>
+        <div class="q-card">
+          <h2 class="q-title" id="questionTitle"></h2>
+          <p class="q-sub" id="questionSub"></p>
+          <div class="answers" id="answers"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="loadingScreen">
+      <div class="panel loading">
+        <div class="spinner"></div>
+        <h2>正在分析 mhx 的生日脑回路……</h2>
+        <p class="lead" style="margin: 0 auto;">请稍等，系统正在把“想要但不好意思说”翻译成礼物。</p>
+      </div>
+    </section>
+
+    <section class="screen" id="resultScreen">
+      <div class="panel">
+        <div class="result-layout">
+          <div class="result-box">
+            <div class="badge">测试结果</div>
+            <h2 id="typeTitle"></h2>
+            <p id="typeDesc"></p>
+            <div class="tagrow" id="typeTags"></div>
+            <div class="footer-note">下一步：点击抽签。抽到的不是“随机糊弄”，是“命运认真糊弄”。</div>
+          </div>
+          <div class="gift-box">
+            <div class="badge">🎁 礼物抽签区</div>
+            <div class="vault" id="vault"></div>
+            <div class="btns">
+              <button class="primary" id="drawBtn" onclick="drawGift()">抽取生日礼物</button>
+              <button class="secondary" onclick="restart()">重新答题</button>
+            </div>
+            <p class="footer-note">提示：第一次抽到的最有仪式感。第二次属于“生日当天可以任性一下”。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="giftScreen">
+      <div class="panel">
+        <div class="badge">🎉 mhx 解锁成功</div>
+        <div class="gift-name" id="giftName"></div>
+        <p class="lead" id="giftWhy"></p>
+        <div class="result-layout">
+          <div class="result-box">
+            <h2>命运给出的线索</h2>
+            <p id="giftReason"></p>
+          </div>
+          <div class="gift-box">
+            <h2>拆礼物前须知</h2>
+            <p id="giftTip"></p>
+          </div>
+        </div>
+        <div class="btns" style="margin-top: 22px;">
+          <button class="primary" id="rerollBtn" onclick="rerollGift()">使用生日反悔权</button>
+          <button class="secondary" onclick="restart()">重新开始</button>
+        </div>
+        <div class="footer-note" id="rerollNote">反悔权只有一次。不是系统小气，是生日礼物也要有边界感。</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        title: "你理想中的‘今天状态不错’更接近哪一种？",
+        sub: "没有正确答案，只有系统正在悄悄给你分类。",
+        answers: [
+          {label: "身上有一点好闻的味道", small: "路过以后，空气记得我来过。", scores: {dior: 3, diptyque: 2}},
+          {label: "穿得舒服，但看起来没随便", small: "松弛感可以有，睡衣感也可以有。", scores: {pajamas: 3, cap: 1}},
+          {label: "随手一拿就能出门", small: "东西别乱，包也别太费劲。", scores: {bag: 3, cap: 1}},
+          {label: "有一个小细节在发光", small: "不必很大，但最好有点存在感。", scores: {gold: 3, lip: 1}}
+        ]
+      },
+      {
+        title: "周末临时多出半天，你最可能怎么过？",
+        sub: "请按真实版本回答，不按朋友圈营业版本回答。",
+        answers: [
+          {label: "随便逛逛，顺便把自己收拾漂亮", small: "没有目的，但可能会买点东西。", scores: {lip: 2, dior: 2, bag: 1}},
+          {label: "戴帽子出门，主打一个轻松", small: "头发状态不参与今天的决策。", scores: {cap: 4}},
+          {label: "在家窝着，把舒服贯彻到底", small: "外面的世界可以下次再说。", scores: {pajamas: 4}},
+          {label: "去一个有气味、有设计感的小店", small: "喜欢的东西最好有点自己的脾气。", scores: {diptyque: 4}}
+        ]
+      },
+      {
+        title: "下面哪一种礼物最容易让你觉得‘她有认真选’？",
+        sub: "核心题出现了，系统开始假装自己很懂你。",
+        answers: [
+          {label: "有纪念意义，几年后还能留着", small: "最好还能附带一点离谱但可爱的创意。", scores: {gold: 4}},
+          {label: "每天都能用，而且越用越顺手", small: "使用频率就是礼物的存在感。", scores: {bag: 4}},
+          {label: "小小一件，但品牌和质感都在线", small: "放包里不占地方，拿出来心情不错。", scores: {lip: 4}},
+          {label: "能一起玩、一起留下点什么", small: "礼物不只是一件东西，最好还有过程。", scores: {camera: 4}}
+        ]
+      },
+      {
+        title: "你比较喜欢哪一种‘贵得有道理’？",
+        sub: "预算管理暂时离场，审美判断正式上线。",
+        answers: [
+          {label: "经典、好认、不会轻易过时", small: "有一点正式的生日主礼物感。", scores: {dior: 3, bag: 2}},
+          {label: "懂的人自然懂，别太大众", small: "不需要所有人都认识。", scores: {diptyque: 4}},
+          {label: "材质本身就有价值", small: "小归小，但不是纯气氛组。", scores: {gold: 4}},
+          {label: "设计简单，搭什么都不费脑", small: "好用和好看最好别二选一。", scores: {cap: 2, bag: 3}}
+        ]
+      },
+      {
+        title: "如果礼物能自动改善一种生活场景，你选哪个？",
+        sub: "暂不考虑科学依据，主要考虑生日心情。",
+        answers: [
+          {label: "素颜出门也显得气色不错", small: "本人没有化全妆，但嘴唇很有精神。", scores: {lip: 5}},
+          {label: "头发不配合时依然可以体面出门", small: "帽子负责解决今天的大部分问题。", scores: {cap: 5}},
+          {label: "回家后立刻进入勿扰模式", small: "舒服到不想再换衣服。", scores: {pajamas: 5}},
+          {label: "普通一天也能留下实体纪念", small: "手机里有照片，手里也要有一张。", scores: {camera: 5}}
+        ]
+      },
+      {
+        title: "你喜欢的香味更像哪一种画面？",
+        sub: "不懂香水术语完全没关系，凭感觉选。",
+        answers: [
+          {label: "明亮、轻盈、像认真打扮后出门", small: "很好亲近，但不是没有存在感。", scores: {dior: 5}},
+          {label: "安静、有层次、像一家很好逛的店", small: "不急着讨好所有人。", scores: {diptyque: 5}},
+          {label: "比起香味，我更在意穿搭完成度", small: "今天先把整体造型管好。", scores: {cap: 2, bag: 3}},
+          {label: "比起香味，我更想要可长期保存的东西", small: "消耗品很好，但留得住也很好。", scores: {gold: 3, camera: 2}}
+        ]
+      },
+      {
+        title: "最后一题：今年的生日礼物关键词，你选哪组？",
+        sub: "选完以后，就不能说自己完全没有参与决策了。",
+        answers: [
+          {label: "精致、明亮、有仪式感", small: "拆开那一刻要像一份正经生日礼物。", scores: {dior: 3, gold: 2}},
+          {label: "松弛、舒服、每天用得到", small: "不需要供起来，直接进入生活。", scores: {pajamas: 3, cap: 2}},
+          {label: "低调、特别、有自己的气质", small: "不追求最大声，但要有记忆点。", scores: {diptyque: 3, lip: 2}},
+          {label: "实用、有趣、以后还能想起来", small: "最好既能用，也能留下故事。", scores: {bag: 2, camera: 3}}
+        ]
+      }
+    ];
+
+    const giftPool = [
+      {
+        key: "gold",
+        code: "EP.01｜All That Glitters…",
+        short: "一份可以留很久、还附带一点游戏彩蛋的惊喜。",
+        why: "你的答案一直在选择‘有纪念意义’和‘能够留下来’。系统因此锁定了一份体积不一定最大，但时间越久越有意思的礼物。",
+        reason: "关键词：小小发光、保值感、专属纪念、附带隐藏小游戏。",
+        tip: "真正答案暂不公开。请向送礼人领取实物，并留意包装里可能还有第二层玩法。"
+      },
+      {
+        key: "dior",
+        code: "EP.02｜The Perfect Present",
+        short: "一份经典、轻盈，并且很有生日主礼物氛围的惊喜。",
+        why: "你的答案偏向明亮、精致和有仪式感。它不是需要研究半天才能理解的礼物，拆开的第一秒就很像今天应该收到的东西。",
+        reason: "关键词：经典品牌、轻盈氛围、日常可用、认真打扮以后出门。",
+        tip: "答案与一种看不见、但会被别人注意到的东西有关。具体是哪一种，先保密。"
+      },
+      {
+        key: "cap",
+        code: "EP.03｜Cover Girl",
+        short: "一份能快速提高穿搭完成度，并顺手解决坏发型日的惊喜。",
+        why: "你多次选择了轻松、好搭和不费脑。系统判断，你更适合一件不需要隆重使用，却会经常出现在日常照片里的东西。",
+        reason: "关键词：美式休闲、随手搭配、出门效率、坏发型日救星。",
+        tip: "它通常出现在造型的最高处。品牌答案继续保密。"
+      },
+      {
+        key: "diptyque",
+        code: "EP.04｜Where There’s Smoke…",
+        short: "一份不急着取悦所有人，但很容易形成个人记忆的惊喜。",
+        why: "你的选择偏向低调、有层次和‘懂的人自然懂’。系统没有给你最热闹的答案，而是选了一份更像个人气质的东西。",
+        reason: "关键词：法式、气味场景、克制、不会过分甜、带一点自己的脾气。",
+        tip: "答案与气味有关，但不是上一条那种气味路线。"
+      },
+      {
+        key: "lip",
+        code: "EP.05｜The Power of Female Sex",
+        short: "一份体积很小，却能在普通日子里频繁提供精致感的惊喜。",
+        why: "你选中了‘随手能用’和‘气色看起来不错’。系统认为，大件不一定最合适，一件能长期住在包里的小东西也很会提供情绪价值。",
+        reason: "关键词：包中常驻、光泽感、精致日常、护唇与妆感之间。",
+        tip: "它不负责改变人生，只负责让嘴唇看起来今天过得不错。品牌暂不公布。"
+      },
+      {
+        key: "bag",
+        code: "EP.06｜A Woman’s Right to Bags",
+        short: "一份不需要供起来、可以立刻加入通勤和出门生活的惊喜。",
+        why: "你的答案非常重视实用、轻便和使用频率。系统锁定的是一件越用越顺手，甚至会逐渐忘记自己以前没有它的东西。",
+        reason: "关键词：法式日常、轻便耐用、随手一拎、能装但不笨重。",
+        tip: "它负责装东西，也负责让出门少一点手忙脚乱。"
+      },
+      {
+        key: "pajamas",
+        code: "EP.07｜The Real Me",
+        short: "一份允许你回家以后立刻停止营业的惊喜。",
+        why: "你坚定地选择了舒服、松弛和高质量宅家。系统判断，今年的礼物应该把‘休息’这件事做得更漂亮一点。",
+        reason: "关键词：柔软、居家、好看地躺平、成年人下班后的正式制服。",
+        tip: "它通常不会被穿去上班，但可能比上班衣服更让人期待。"
+      },
+      {
+        key: "camera",
+        code: "EP.08｜I Heart NY",
+        short: "一份能把普通瞬间马上变成可拿在手里纪念品的惊喜。",
+        why: "你的答案喜欢过程、互动和能够留下故事的东西。系统因此选择了一份不是摆在那里结束，而是拿到以后才刚刚开始的礼物。",
+        reason: "关键词：即时成像、一起玩、实体照片、生日当天就能制造纪念。",
+        tip: "请在收到礼物当天保持适合拍照的状态。更多信息暂不公开。"
+      }
+    ];
+
+    const types = {
+      gold: {title: "长期主义收藏派", desc: "mhx 的答案明显偏向可以保存、带纪念意义，而且最好还有一点专属巧思的东西。", tags: ["留得住", "有纪念性", "小小发光"]},
+      dior: {title: "明亮仪式感派", desc: "mhx 偏爱经典、轻盈、拆开就很像生日主礼物的路线。", tags: ["经典", "明亮", "生日氛围"]},
+      cap: {title: "松弛穿搭派", desc: "mhx 喜欢不费脑、好搭、能迅速让整体造型完整起来的东西。", tags: ["轻松出门", "好搭", "高频使用"]},
+      diptyque: {title: "安静气味派", desc: "mhx 更容易被有层次、有场景感、不过分讨好大众的气质打动。", tags: ["低调", "有层次", "个人气质"]},
+      lip: {title: "随身精致派", desc: "mhx 适合体积小、品牌感在线、能够频繁改善普通日常的小东西。", tags: ["包中常驻", "气色加成", "精致日常"]},
+      bag: {title: "日常顺手派", desc: "mhx 看重实用、轻便和使用频率，礼物最好能立刻进入日常生活。", tags: ["能装", "轻便", "越用越顺手"]},
+      pajamas: {title: "漂亮躺平派", desc: "mhx 认为舒服本身就是正经需求，而且居家也可以有一点仪式感。", tags: ["柔软", "松弛", "回家回血"]},
+      camera: {title: "回忆制造派", desc: "mhx 喜欢礼物带来过程和互动，拿到以后还能继续制造新的纪念。", tags: ["有趣", "一起玩", "留下故事"]}
+    };
+
+    let current = 0;
+    let scores = {};
+    let finalType = "dior";
+    let rankedTypes = [];
+    let currentGift = null;
+    let rerolled = false;
+
+    function setScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function startQuiz() {
+      current = 0;
+      scores = {gold: 0, dior: 0, cap: 0, diptyque: 0, lip: 0, bag: 0, pajamas: 0, camera: 0};
+      currentGift = null;
+      rerolled = false;
+      document.getElementById('rerollBtn').disabled = false;
+      document.getElementById('rerollNote').textContent = "反悔权只有一次。不是系统小气，是生日礼物也要有边界感。";
+      setScreen('quizScreen');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questions[current];
+      document.getElementById('counter').textContent = `问题 ${current + 1} / ${questions.length}`;
+      document.getElementById('bar').style.width = `${(current / questions.length) * 100}%`;
+      document.getElementById('questionTitle').textContent = q.title;
+      document.getElementById('questionSub').textContent = q.sub;
+      const answers = document.getElementById('answers');
+      answers.innerHTML = '';
+      q.answers.forEach((a) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer';
+        btn.innerHTML = `<strong>${a.label}</strong><small>${a.small}</small>`;
+        btn.onclick = () => choose(a.scores);
+        answers.appendChild(btn);
+      });
+    }
+
+    function choose(add) {
+      Object.entries(add).forEach(([k, v]) => scores[k] = (scores[k] || 0) + v);
+      current++;
+      if (current >= questions.length) {
+        document.getElementById('bar').style.width = '100%';
+        setScreen('loadingScreen');
+        setTimeout(showResult, 1250);
+      } else {
+        renderQuestion();
+      }
+    }
+
+    function topType() {
+      const entries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      return entries[0][0] || 'dior';
+    }
+
+    function showResult() {
+      finalType = topType();
+      rankedTypes = Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+      const type = types[finalType] || types.dior;
+      document.getElementById('typeTitle').textContent = type.title;
+      document.getElementById('typeDesc').textContent = type.desc;
+      const tags = document.getElementById('typeTags');
+      tags.innerHTML = '';
+      type.tags.forEach(t => {
+        const el = document.createElement('span');
+        el.className = 'tag';
+        el.textContent = t;
+        tags.appendChild(el);
+      });
+      renderVault();
+      setScreen('resultScreen');
+    }
+
+    function renderVault(selectedIndex = -1) {
+      const vault = document.getElementById('vault');
+      vault.innerHTML = '';
+      const labels = ['A号礼盒', 'B号礼盒', 'C号礼盒', 'D号礼盒', 'E号礼盒', 'F号礼盒', 'G号礼盒', 'H号礼盒'];
+      labels.forEach((label, i) => {
+        const card = document.createElement('div');
+        card.className = 'vault-card' + (i === selectedIndex ? ' selected' : '');
+        card.innerHTML = i === selectedIndex ? '抽中！' : `${label}<br>？`;
+        vault.appendChild(card);
+      });
+    }
+
+    function matchedGift(typeKey) {
+      return giftPool.find(g => g.key === typeKey) || giftPool[0];
+    }
+
+    function drawGift() {
+      document.getElementById('drawBtn').disabled = true;
+      let ticks = 0;
+      const timer = setInterval(() => {
+        renderVault(Math.floor(Math.random() * 6));
+        ticks++;
+        if (ticks > 12) {
+          clearInterval(timer);
+          currentGift = matchedGift(finalType);
+          showGift(currentGift);
+          confetti();
+          document.getElementById('drawBtn').disabled = false;
+        }
+      }, 100);
+    }
+
+    function showGift(gift) {
+      document.getElementById('giftName').textContent = gift.code;
+      document.getElementById('giftWhy').textContent = gift.why;
+      document.getElementById('giftReason').textContent = gift.reason;
+      document.getElementById('giftTip').textContent = gift.tip;
+      setScreen('giftScreen');
+    }
+
+    function rerollGift() {
+      if (rerolled) return;
+      rerolled = true;
+      const secondType = rankedTypes.find(k => k !== finalType) || finalType;
+      let next = matchedGift(secondType);
+      currentGift = next;
+      document.getElementById('rerollBtn').disabled = true;
+      document.getElementById('rerollNote').textContent = "生日反悔权已使用。系统表示：这次就别再为难我了。";
+      showGift(currentGift);
+      confetti();
+    }
+
+
+    function goStart() { setScreen('startScreen'); }
+    function restart() { startQuiz(); }
+
+    function confetti() {
+      const box = document.getElementById('confetti');
+      const colors = ['#d65c8a', '#7c5cff', '#ffb347', '#45b8ac', '#ffd166'];
+      for (let i = 0; i < 72; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.left = Math.random() * 100 + 'vw';
+        dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+        dot.style.animationDelay = Math.random() * .35 + 's';
+        dot.style.transform = `rotate(${Math.random() * 360}deg)`;
+        box.appendChild(dot);
+        setTimeout(() => dot.remove(), 3000);
+      }
+    }
+  </script>
+</body>
+</html>
