@@ -640,7 +640,10 @@
       q.answers.forEach((a) => {
         const btn = document.createElement('button');
         btn.className = 'answer';
-        btn.innerHTML = `<strong>${a.label}</strong><small>${a.small}</small>`;
+        btn.innerHTML = `
+  <strong>${a.label}</strong>
+  ${a.small ? `<small>${a.small}</small>` : ''}
+`;
         btn.onclick = () => choose(a.scores);
         answers.appendChild(btn);
       });
